@@ -47,7 +47,7 @@ Clone the Repository
 
 bash
 Copy code
-git clone https://github.com/yourusername/fast-charging-protocols-pybamm.git
+git clone https://github.com/Thiru-1210/Evaluation-of-Fast-Charging-Protocols-for-Lithium-Ion-batteries/edit/main/README.md
 cd fast-charging-protocols-pybamm
 Install Dependencies
 
@@ -62,7 +62,7 @@ python run_simulations.py
 Contact
 Feel free to reach out to discuss this project or explore potential collaborations!
 
-Email: your.email@example.com
-LinkedIn: Your LinkedIn Profile
+Email: thiruvenkatanath12@outlook.com
+LinkedIn: Thiruvenkatanath Balaji
 License
 This project is licensed under the MIT License - see the LICENSE file for details.
