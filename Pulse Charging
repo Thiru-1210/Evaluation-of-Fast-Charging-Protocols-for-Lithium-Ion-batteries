@@ -1,0 +1,50 @@
+#Pulse Charging
+
+import pybamm
+import numpy as np
+import matplotlib.pyplot as plt
+
+options = {"thermal": "lumped"}
+model = pybamm.lithium_ion.SPM(options=options)
+parameter_values = pybamm.ParameterValues("Chen2020")
+
+I = [1, 1.5]
+fig, ax = plt.subplots(3, 1, figsize=(6, 12))
+
+for current in I:
+    # Define the pulse charging experiment
+    experiment = pybamm.Experiment(
+        [
+        "Discharge at C/1 for 1 hour",
+        (f"Charge at {current}C for 1 minute or until 4.2V", "Rest for 1 minute") * 60,  # Pulse charging
+        "Hold at 4.2V until C/50"
+        ],
+        period="10 seconds"
+    )
+    sim = pybamm.Simulation(model, experiment=experiment, parameter_values=parameter_values)
+    solution = sim.solve()
+
+    # Define the discharge time (in seconds)
+    discharge_time = 60 * 60  # 1 hour
+
+    # Create a mask for the charging time
+    charging_time = solution["Time [s]"].entries >= discharge_time
+
+    ax[0].plot(solution["Time [s]"].entries[charging_time], solution["Terminal voltage [V]"].entries[charging_time], label=f'{current}C')
+    ax[1].plot(solution["Time [s]"].entries[charging_time], solution["Current [A]"].entries[charging_time], label=f'{current}C')
+    ax[2].plot(solution["Time [s]"].entries[charging_time], solution["X-averaged cell temperature [K]"].entries[charging_time] - 273.15, label=f'{current}C')
+
+ax[0].set_xlabel('Time [s]')
+ax[0].set_ylabel('Voltage [V]')
+ax[0].legend()
+
+ax[1].set_xlabel('Time [s]')
+ax[1].set_ylabel('Current [A]')
+ax[1].legend()
+
+ax[2].set_xlabel('Time [s]')
+ax[2].set_ylabel('Cell Temperature [C]')
+ax[2].legend()
+
+plt.tight_layout()
+plt.show()
